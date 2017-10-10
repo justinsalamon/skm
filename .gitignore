@@ -1,1 +1,4 @@
 .idea/*
+skm.egg-info/*
+skm/__pycache__/*
+examples/.ipynb_checkpoints/*
