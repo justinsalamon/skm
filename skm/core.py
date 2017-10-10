@@ -5,6 +5,7 @@ import sklearn
 import pickle
 import simplejson as json
 from sklearn.decomposition import PCA
+from skm.display import visualize_clusters
 
 
 class SKM(object):
@@ -314,7 +315,7 @@ class SKM(object):
         self._init_assignment()
 
         if self.visualize:
-                self._visualize_clusters(X)
+                visualize_clusters(self, X)
 
         # Iteratively update and normalize centroids
         while self.epoch < self.max_epochs and self.assignment_change > self.assignment_change_eps:
@@ -329,7 +330,7 @@ class SKM(object):
             self.epoch += 1
             # self._report_status()
             if self.visualize:
-                self._visualize_clusters(X)
+                visualize_clusters(self, X)
 
 
     def fit_minibatch(self, X):
@@ -559,7 +560,8 @@ class SKM(object):
             npz_dict = {}
 
             # find the ndarrays in skm and store them separately
-            for k in params_skm.keys():
+            # for k in params_skm.keys():
+            for k in list(params_skm):
                 if type(params_skm[k]) is np.ndarray:
                     npz_dict[k] = params_skm[k]
                     params_skm.pop(k)
@@ -568,7 +570,8 @@ class SKM(object):
             json_dict['params'] = params_skm
 
             # find the ndarrays in pca and store them separately
-            for k in params_pca.keys():
+            # for k in params_pca.keys():
+            for k in list(params_pca):
                 if type(params_pca[k]) is np.ndarray:
                     npz_dict['pca.'+k] = params_pca[k]
                     params_pca.pop(k)
@@ -580,6 +583,10 @@ class SKM(object):
             # save json_dict to disk
             # fix for json floats
             json_dict['params_pca']['noise_variance_'] = round(float(json_dict['params_pca']['noise_variance_']), 15)
+            # fix int64
+            for key in json_dict['params_pca'].keys():
+                if type(json_dict['params_pca'][key]) is np.int64:
+                    json_dict['params_pca'][key] = int(json_dict['params_pca'][key])
             # print json_dict
             json.dump(json_dict, fp, indent=2)
 
