@@ -20,7 +20,7 @@ def visualize_clusters(s, X):
     '''
     plt.figure(figsize=(8,8))
     # colors_ = ['b','r','g', 'c', 'm', 'y', 'k', 'DeepPink', 'Lime', 'Maroon', 'b','r','g', 'c', 'm', 'y', 'k', 'DeepPink', 'Lime', 'Maroon']
-    cmap = s._get_cmap(s.k)
+    cmap = _get_cmap(s.k)
     for n,point in enumerate(X.T):
         # point = self.pca.inverse_transform(point.T)
         if s.assignment is None:
